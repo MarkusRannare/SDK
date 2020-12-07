@@ -38,12 +38,6 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Install packages (Ubuntu)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install libcurl4-gnutls-dev
-
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -60,20 +54,13 @@ jobs:
       - name: Compile source code
         run: |
           cd ${{ matrix.build-src-dir || '.' }}
-          cmake --build . --config ${{ matrix.build-config || 'Release' }}
-
-      - name: Prepare artifact
-        if: runner.os == 'Linux' || runner.os == 'macOS'
-        shell: bash
-        run: |
-          mkdir Release
-          mv libmodio* Release
+          cmake --build . --config ${{ matrix.build-config || 'RelWithDebInfo' }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v1
         with:
           name: ${{ matrix.artifact-name }}
-          path: Release
+          path: RelWithDebInfo
 
   docs:
     name: Generate docs.zip
@@ -123,18 +110,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Download Linux
-        uses: actions/download-artifact@v1
-        with:
-          name: x86_64-linux-gnu
-          path: artifacts/x86_64-linux-gnu
-
-      - name: Download Linux +static
-        uses: actions/download-artifact@v1
-        with:
-          name: x86_64-linux-gnu+static
-          path: artifacts/x86_64-linux-gnu+static
-
       - name: Download Win32
         uses: actions/download-artifact@v1
         with:
@@ -159,28 +134,11 @@ jobs:
           name: x86_64-windows-msvc+static
           path: artifacts/x86_64-windows-msvc+static
 
-      - name: Download macOS
-        uses: actions/download-artifact@v1
-        with:
-          name: x86_64-apple-darwin
-          path: artifacts/x86_64-apple-darwin
-
-      - name: Download macOS +static
-        uses: actions/download-artifact@v1
-        with:
-          name: x86_64-apple-darwin+static
-          path: artifacts/x86_64-apple-darwin+static
-
       - name: Build
         id: build
         run: |
           tag=$(git describe --tags --abbrev=0)
           package="mod.io-sdk-$tag"
-
-          # linux
-          mkdir -p "$package"/{lib,static}/linux/x64
-          mv artifacts/x86_64-linux-gnu/libmodio.so "$package/lib/linux/x64"
-          mv artifacts/x86_64-linux-gnu+static/libmodio.a "$package/static/linux/x64"
 
           # win32 & win64
           mkdir -p "$package"/{bin,lib,static}/msvc/{x86,x64}
@@ -189,18 +147,11 @@ jobs:
           mv artifacts/i686-windows-msvc/modio.pdb "$package/bin/msvc/x86"
           mv artifacts/i686-windows-msvc/modio.lib "$package/lib/msvc/x86"
           mv artifacts/i686-windows-msvc+static/modio.lib "$package/static/msvc/x86"
-          mv artifacts/i686-windows-msvc+static/modio.pdb "$package/static/msvc/x86"
 
           mv artifacts/x86_64-windows-msvc/modio.dll "$package/bin/msvc/x64"
           mv artifacts/x86_64-windows-msvc/modio.pdb "$package/bin/msvc/x64"
           mv artifacts/x86_64-windows-msvc/modio.lib "$package/lib/msvc/x64"
           mv artifacts/x86_64-windows-msvc+static/modio.lib "$package/static/msvc/x64"
-          mv artifacts/x86_64-windows-msvc+static/modio.pdb "$package/static/msvc/x64"
-
-          # macOS
-          mkdir -p "$package"/{lib,static}/macOS/x64
-          mv artifacts/x86_64-apple-darwin/libmodio.dylib "$package/lib/macOS/x64"
-          mv artifacts/x86_64-apple-darwin+static/libmodio.a "$package/static/macOS/x64"
 
           mv additional_dependencies "$package"
           mv include "$package"
