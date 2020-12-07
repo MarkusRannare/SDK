@@ -205,12 +205,16 @@ jobs:
           mkdir -p "$package"/{bin,lib,static}/msvc/{x86,x64}
 
           mv artifacts/i686-windows-msvc/modio.dll "$package/bin/msvc/x86"
+          mv artifacts/i686-windows-msvc/modio.pdb "$package/bin/msvc/x86"
           mv artifacts/i686-windows-msvc/modio.lib "$package/lib/msvc/x86"
           mv artifacts/i686-windows-msvc+static/modio.lib "$package/static/msvc/x86"
+          mv artifacts/i686-windows-msvc+static/modio.pdb "$package/static/msvc/x86"
 
           mv artifacts/x86_64-windows-msvc/modio.dll "$package/bin/msvc/x64"
+          mv artifacts/x86_64-windows-msvc/modio.pdb "$package/bin/msvc/x64"
           mv artifacts/x86_64-windows-msvc/modio.lib "$package/lib/msvc/x64"
           mv artifacts/x86_64-windows-msvc+static/modio.lib "$package/static/msvc/x64"
+          mv artifacts/x86_64-windows-msvc+static/modio.pdb "$package/static/msvc/x64"
 
           # macOS
           mkdir -p "$package"/{lib,static}/macOS/x64
