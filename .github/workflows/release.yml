@@ -16,15 +16,6 @@ jobs:
           - Windows 2019 MSVC win64
           - Windows 2019 MSVC win64 +static
         include:
-          - name: Ubuntu 18.04 GCC+libcurl-gnutls
-            os: ubuntu-18.04
-            artifact-name: x86_64-linux-gnu
-
-          - name: Ubuntu 18.04 GCC+libcurl-gnutls +static
-            os: ubuntu-18.04
-            cmake-args: -DBUILD_SHARED_LIBS=OFF
-            artifact-name: x86_64-linux-gnu+static
-
           - name: Windows 2019 MSVC win32
             os: windows-2019
             cmake-args: -A Win32
@@ -44,16 +35,6 @@ jobs:
             os: windows-2019
             cmake-args: -A x64 -DBUILD_SHARED_LIBS=OFF
             artifact-name: x86_64-windows-msvc+static
-
-          - name: macOS 10.15 Clang
-            os: macOS-latest
-            artifact-name: x86_64-apple-darwin
-
-          - name: macOS 10.15 Clang +static
-            os: macOS-latest
-            cmake-args: -DBUILD_SHARED_LIBS=OFF
-            artifact-name: x86_64-apple-darwin+static
-
     runs-on: ${{ matrix.os }}
 
     steps:
