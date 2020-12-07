@@ -11,14 +11,10 @@ jobs:
     strategy:
       matrix:
         name:
-          - Ubuntu 18.04 GCC+libcurl-gnutls
-          - Ubuntu 18.04 GCC+libcurl-gnutls +static
           - Windows 2019 MSVC win32
           - Windows 2019 MSVC win32 +static
           - Windows 2019 MSVC win64
           - Windows 2019 MSVC win64 +static
-          - macOS 10.15 Clang
-          - macOS 10.15 Clang +static
         include:
           - name: Ubuntu 18.04 GCC+libcurl-gnutls
             os: ubuntu-18.04
