@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
+set (CMAKE_OSX_DEPLOYMENT_TARGET "10.4")
 project(modio)
 set (CMAKE_CXX_STANDARD 11)
 
